@@ -1,0 +1,38 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- large source data (not versioned; see data/README.md) ---
+data/satellite/
+data/cadastral/
+models/
+자료/
+
+# --- generated artifacts ---
+data/chips/
+data/remoteclip/
+data/output/
+
+# --- labeling tool artifacts (keep only labels.csv / manifest.csv / README.md) ---
+data/labels/**/previews/
+data/labels/**/previews_fit/
+data/labels/**/label_tool.html
+data/labels/**/labels.json
+data/labels/**/임야/
+data/labels/**/형질변경/
+data/labels/**/형질변경의심/
+data/labels/**/보류/
+
+# --- scratch / OS ---
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# QGIS project files
+*.qgz
+*.qgs
+*.qgz~

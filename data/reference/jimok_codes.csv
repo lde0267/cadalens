@@ -1,0 +1,29 @@
+code,buho,name_ko,name_hanja,name_en,category,land_cover_expected,is_developed,definition_ko
+01,전,전,田,dry field / upland,agriculture,bare-soil / crops (non-paddy),0,물을 상시 이용하지 않고 곡물·원예작물(과수 제외)·약초·뽕나무·묘목·관상수 등을 재배하는 토지 및 식용 죽순 재배지
+02,답,답(논),畓,rice paddy,agriculture,paddy field (often flooded),0,물을 상시 직접 이용하여 벼·연·미나리·왕골 등을 재배하는 토지
+03,과,과수원,果樹園,orchard,agriculture,tree rows / orchard,0,사과·배·밤·호두·귤 등 과수류를 집단 재배하는 토지와 부속시설물 부지 (주거용 건축물 부지는 대)
+04,목,목장용지,牧場用地,pasture / livestock,agriculture,grassland / pasture,0,축산업·낙농업을 위해 초지를 조성한 토지, 가축 사육 축사 등의 부지 (주거용 건축물 부지는 대)
+05,임,임야,林野,forest,forest,forest / trees,0,산림 및 원야를 이루는 수림지·죽림지·암석지·자갈땅·모래땅·습지·황무지 등
+06,광,광천지,鑛泉地,mineral spring,resource,spring head / pipe area,0,지하에서 온수·약수·석유류 등이 용출되는 용출구와 그 유지에 사용되는 부지 (운송·저장·가공 부지는 제외)
+07,염,염전,鹽田,salt pond,resource,salt evaporation ponds,0,바닷물을 끌어들여 소금을 채취하는 토지와 부속시설물 부지 (동력 제조공장 시설 부지는 제외)
+08,대,대(대지),垈,building site,built,buildings / structures,1,영구적 건축물(주거·사무실·점포·문화시설 등)과 접속된 정원·부속시설물 부지, 택지조성공사가 준공된 토지
+09,장,공장용지,工場用地,factory / industrial,built,factory buildings / yards,1,제조업 공장시설물 부지, 같은 구역 내 부속시설물 부지, 조성 준공된 토지
+10,학,학교용지,學校用地,school,built,school buildings / grounds,1,학교의 교사와 이에 접속된 체육장 등 부속시설물의 부지
+11,차,주차장,駐車場,parking lot,built,paved lot / parked vehicles,1,자동차 주차에 필요한 독립적 시설을 갖춘 부지와 주차전용 건축물·시설 부지 (노상·부설주차장, 자동차 판매 야적장은 제외)
+12,주,주유소용지,注油所用地,gas station,built,fuel station canopy / lot,1,석유·석유제품·액화석유가스·전기·수소 등의 판매를 위한 시설 부지, 저유소·원유저장소 부지
+13,창,창고용지,倉庫用地,warehouse,built,warehouse buildings / yards,1,물건을 보관·저장하기 위한 보관시설물 부지와 부속시설물 부지
+14,도,도로,道路,road,infrastructure,paved / unpaved road,1,보행·차량 통행에 이용되는 토지, 고속도로 휴게소 부지, 2필지 이상에 진입하는 통로 (아파트 단지 내 통로 등은 제외)
+15,철,철도용지,鐵道用地,railway,infrastructure,rail tracks / station,1,교통 운수를 위한 궤도·역사·차고 등 부속시설물 부지
+16,제,제방,堤防,embankment / dike,infrastructure,earthen / concrete levee,1,조수·자연유수·모래·바람 등을 막기 위해 축조된 방조제·방수제·방사제·방파제 등의 부지
+17,천,하천,河川,river / stream,water,flowing water / channel,0,자연의 유수가 있거나 있을 것으로 예상되는 토지
+18,구,구거,溝渠,ditch / small canal,water,small channel / drainage,0,용수·배수를 위해 인공을 가한 수로·둑 및 그 부속시설물 부지와 자연의 유수가 있거나 예상되는 소규모 수로부지
+19,유,유지,溜池,reservoir / pond,water,standing water,0,물이 고이거나 상시적으로 물을 저장하는 댐·저수지·소류지·연못 등의 토지와 연·왕골 등이 자생하는 배수가 잘 안 되는 토지
+20,양,양어장,養魚場,fish farm,water,aquaculture ponds,1,육상에 인공으로 조성된 수산생물의 번식·양식 시설 부지와 부속시설물 부지
+21,수,수도용지,水道用地,waterworks,infrastructure,treatment / pump facility,1,물을 정수하여 공급하기 위한 취수·저수·도수·정수·송수·배수 시설 부지와 부속시설물 부지
+22,공,공원,公園,park,recreation,greenspace / paths,1,공중의 보건·휴양·정서생활에 이용하기 위한 시설로 국토계획법상 공원·녹지로 결정·고시된 토지
+23,체,체육용지,體育用地,sports facility,recreation,fields / courts / stadium,1,국민 건강증진을 위한 종합운동장·실내체육관·야구장·골프장·스키장·승마장·경륜장 등 부지 (자연 경관 이용 야영장 등은 제외)
+24,원,유원지,遊園地,amusement park,recreation,rides / resort facilities,1,위락·휴양에 이용되는 수영장·유선장·낚시터·어린이놀이터·동물원·식물원·민속촌·경마장·야영장 등의 부지
+25,종,종교용지,宗敎用地,religious,built,church / temple buildings,1,예배·법요·설교·제사 등을 위한 교회·사찰·향교 등 건축물의 부지와 부속시설물 부지
+26,사,사적지,史蹟地,historic site,heritage,monument / preserved grounds,1,국가유산으로 지정된 역사적·학술적 가치가 큰 토지 (학교·공원·종교용지 등 다른 지목 안의 유적은 제외)
+27,묘,묘지,墓地,cemetery,other,graves / mounds,1,사람의 시체나 유골이 매장된 토지, 도시공원묘지·봉안시설 부지 (묘지 관리용 건축물 부지는 대)
+28,잡,잡종지,雜種地,miscellaneous,other,mixed / vacant / yard,1,갈대밭·물건 야적장·돌 캐내는 곳·야외시장·비행장·공동우물, 변전소·송신소·공중화장실 등, 다른 지목에 속하지 않는 토지

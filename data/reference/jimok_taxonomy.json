@@ -1,0 +1,72 @@
+{
+  "_meta": {
+    "source": "공간정보의 구축 및 관리 등에 관한 법률 시행령 제58조 (지목 28종)",
+    "purpose": "RemoteCLIP zero-shot 용 영어 프롬프트 + 28지목 -> 시각 분류군(visual_class) 매핑",
+    "separability": "high=영상만으로 대체로 구분 / medium=조건부 / low=자주 혼동 / none=영상 단서 없음",
+    "templates": [
+      "a satellite photo of {}.",
+      "an aerial photo of {}.",
+      "a high-resolution aerial image of {}.",
+      "a remote sensing image of {}."
+    ]
+  },
+
+  "visual_classes": {
+    "forest":            ["a forest", "dense woodland", "a tree-covered hill", "mountain forest"],
+    "barren_land":       ["bare rocky ground", "a gravel and sand patch", "a barren wasteland", "an exposed slope"],
+    "dry_cropland":      ["a dry farm field", "cultivated upland crops", "plowed dry fields", "vegetable plots"],
+    "paddy_field":       ["flooded rice paddies", "bunded rice fields", "a wet paddy field", "rice fields with water"],
+    "orchard":           ["an orchard", "regularly spaced fruit trees", "rows of fruit trees on a slope"],
+    "greenhouse":        ["plastic greenhouses", "rows of white vinyl greenhouses", "a greenhouse complex"],
+    "pasture_grass":     ["a grassy pasture", "managed grassland", "a mown turf area", "a meadow"],
+    "built_residential": ["houses", "a residential neighborhood", "small building rooftops", "a village"],
+    "built_large":       ["a large warehouse", "a factory building", "a big metal-roof industrial building", "a distribution center"],
+    "built_small":       ["a small isolated building", "a rural shed", "a prefabricated container building", "a farm outbuilding"],
+    "institutional":     ["a school campus", "a large building with a sports ground", "an institutional complex"],
+    "religious":         ["a temple complex", "a church building", "a traditional tiled-roof shrine"],
+    "road":              ["a paved road", "an asphalt highway", "a concrete access road", "a road interchange"],
+    "railway":           ["a railway line", "train tracks", "a rail corridor with curved parallel lines"],
+    "parking_yard":      ["a parking lot", "a paved lot with parked cars", "an open storage yard with stacked goods"],
+    "water_body":        ["a reservoir", "a pond", "a lake", "a wide river channel"],
+    "narrow_channel":    ["a narrow irrigation ditch", "a small concrete-lined canal", "a drainage channel"],
+    "aquaculture":       ["rectangular fish farm ponds", "an aquaculture pond complex"],
+    "embankment":        ["a levee", "an earthen flood embankment", "a concrete dike along water"],
+    "cemetery":          ["a hillside cemetery with grave mounds", "rows of burial mounds", "a graveyard"],
+    "bare_construction": ["a construction site", "freshly graded bare earth", "land cleared and leveled for development"],
+    "solar_farm":        ["ground-mounted solar panels", "a photovoltaic power plant", "rows of solar panels"],
+    "sports_field":      ["a baseball field", "a running track and field", "a golf course fairway", "a stadium"],
+    "park_greenspace":   ["an urban park with paths", "a landscaped green space", "a public garden"],
+    "salt_pond":         ["coastal salt evaporation ponds", "a grid of shallow salt pans"]
+  },
+
+  "jimok": [
+    {"code": "01", "buho": "전",   "ko": "전",       "en": "dry field",            "visual_class": "dry_cropland",      "separability": "medium", "note": "비닐하우스 있으면 greenhouse 로 잡힘"},
+    {"code": "02", "buho": "답",   "ko": "답(논)",   "en": "rice paddy",           "visual_class": "paddy_field",       "separability": "high",   "note": "담수/논둑 안 보이는 계절엔 dry_cropland 와 혼동"},
+    {"code": "03", "buho": "과",   "ko": "과수원",   "en": "orchard",              "visual_class": "orchard",           "separability": "high"},
+    {"code": "04", "buho": "목",   "ko": "목장용지", "en": "pasture / livestock",  "visual_class": "pasture_grass",     "separability": "medium", "note": "축사 있으면 built_large"},
+    {"code": "05", "buho": "임",   "ko": "임야",     "en": "forest / woodland",    "visual_class": "forest",            "separability": "high",   "note": "암석지·황무지는 barren_land"},
+    {"code": "06", "buho": "광",   "ko": "광천지",   "en": "mineral spring site",  "visual_class": "built_small",       "separability": "none"},
+    {"code": "07", "buho": "염",   "ko": "염전",     "en": "salt pond",            "visual_class": "salt_pond",         "separability": "high",   "note": "내륙엔 없음"},
+    {"code": "08", "buho": "대",   "ko": "대(대지)", "en": "building site",        "visual_class": "built_residential", "separability": "medium"},
+    {"code": "09", "buho": "장",   "ko": "공장용지", "en": "factory land",         "visual_class": "built_large",       "separability": "medium"},
+    {"code": "10", "buho": "학",   "ko": "학교용지", "en": "school land",          "visual_class": "institutional",     "separability": "medium"},
+    {"code": "11", "buho": "차",   "ko": "주차장",   "en": "parking lot",          "visual_class": "parking_yard",      "separability": "low",    "note": "road 와 혼동"},
+    {"code": "12", "buho": "주",   "ko": "주유소용지","en": "gas station",         "visual_class": "built_small",       "separability": "low"},
+    {"code": "13", "buho": "창",   "ko": "창고용지", "en": "warehouse land",       "visual_class": "built_large",       "separability": "medium"},
+    {"code": "14", "buho": "도",   "ko": "도로",     "en": "road",                "visual_class": "road",              "separability": "high"},
+    {"code": "15", "buho": "철",   "ko": "철도용지", "en": "railway land",         "visual_class": "railway",           "separability": "medium"},
+    {"code": "16", "buho": "제",   "ko": "제방",     "en": "embankment",          "visual_class": "embankment",        "separability": "medium"},
+    {"code": "17", "buho": "천",   "ko": "하천",     "en": "river / stream",       "visual_class": "water_body",        "separability": "medium", "note": "폭 좁으면 narrow_channel"},
+    {"code": "18", "buho": "구",   "ko": "구거",     "en": "ditch / small canal",  "visual_class": "narrow_channel",    "separability": "low"},
+    {"code": "19", "buho": "유",   "ko": "유지",     "en": "reservoir / pond",     "visual_class": "water_body",        "separability": "medium"},
+    {"code": "20", "buho": "양",   "ko": "양어장",   "en": "fish farm",            "visual_class": "aquaculture",       "separability": "medium"},
+    {"code": "21", "buho": "수",   "ko": "수도용지", "en": "waterworks land",      "visual_class": "built_large",       "separability": "none"},
+    {"code": "22", "buho": "공",   "ko": "공원",     "en": "park",                "visual_class": "park_greenspace",   "separability": "low"},
+    {"code": "23", "buho": "체",   "ko": "체육용지", "en": "sports facility",      "visual_class": "sports_field",      "separability": "high",   "note": "골프장·야구장·트랙은 명확"},
+    {"code": "24", "buho": "원",   "ko": "유원지",   "en": "amusement park",       "visual_class": "park_greenspace",   "separability": "low"},
+    {"code": "25", "buho": "종",   "ko": "종교용지", "en": "religious land",       "visual_class": "religious",         "separability": "low"},
+    {"code": "26", "buho": "사",   "ko": "사적지",   "en": "historic site",        "visual_class": "park_greenspace",   "separability": "none"},
+    {"code": "27", "buho": "묘",   "ko": "묘지",     "en": "cemetery",            "visual_class": "cemetery",          "separability": "high",   "note": "한국식 봉분 열이 특징적"},
+    {"code": "28", "buho": "잡",   "ko": "잡종지",   "en": "miscellaneous land",   "visual_class": "parking_yard",      "separability": "none",   "note": "변전소·터미널·야적·갈대밭 등 잡탕 — 예측 불가"}
+  ]
+}
