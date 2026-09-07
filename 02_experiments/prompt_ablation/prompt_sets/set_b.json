@@ -1,0 +1,19 @@
+{
+  "positive": [
+    "a hillside densely covered with tree canopy",
+    "a mix of evergreen and leafless deciduous trees on rough terrain",
+    "an uncultivated wooded slope with no roads or buildings",
+    "forest with irregular natural tree spacing, not planted in rows",
+    "a bare brown deciduous forest canopy in winter",
+    "a steep forested mountainside"
+  ],
+  "negative": [
+    "a patch of bare soil with tree stumps where forest was cleared",
+    "graded flat bare earth with tire tracks cut into a wooded hill",
+    "a metal-roofed shed or building surrounded by trees",
+    "rows of dark solar panels on a cleared hillside",
+    "a new dirt or paved road cut through forest",
+    "grave mounds on a cleared hillside",
+    "a cultivated field or greenhouse on former forest land"
+  ]
+}

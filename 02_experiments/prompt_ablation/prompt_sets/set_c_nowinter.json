@@ -1,0 +1,23 @@
+{
+  "positive": [
+    "a tree canopy on a slope",
+    "a canopy of closely spaced trees",
+    "a dense canopy of dark evergreen conifers",
+    "an irregular natural mix of tree crowns",
+    "scattered trees over rough grass on a steep hillside",
+    "rugged tree-covered ground with no clearing or track"
+  ],
+  "negative": [
+    "a wide paved road or graded dirt track cutting across the hillside",
+    "bare soil with cut tree stumps where trees were removed",
+    "flat graded bare earth leveled by machinery",
+    "rows of dark solar photovoltaic panels",
+    "long white plastic greenhouse roofs",
+    "a plowed or cultivated crop field",
+    "rows of round grassy grave mounds",
+    "a building with a bright metal roof",
+    "an open dirt yard with parked vehicles or stacked materials",
+    "a construction site with concrete foundations or retaining walls",
+    "exposed rock, gravel, and landslide scars on bare ground"
+  ]
+}

@@ -5,26 +5,30 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
-# --- large source data (not versioned; see data/README.md) ---
-data/satellite/
-data/cadastral/
+# --- 모델 가중치 (HuggingFace 자동 캐시) ---
 models/
+
+# --- 참고 자료 (논문 등) ---
 자료/
 
-# --- generated artifacts ---
-data/chips/
-data/remoteclip/
-data/output/
+# --- 01_preprocess: 대용량 원본·중간 산출 (data/README 대체는 01_preprocess/README) ---
+01_preprocess/raw/
+01_preprocess/derived/
+01_preprocess/chips/
 
-# --- labeling tool artifacts (keep only labels.csv / manifest.csv / README.md) ---
-data/labels/**/previews/
-data/labels/**/previews_fit/
-data/labels/**/label_tool.html
-data/labels/**/labels.json
-data/labels/**/임야/
-data/labels/**/형질변경/
-data/labels/**/형질변경의심/
-data/labels/**/보류/
+# --- 실험 산출물 / 파이프라인 실행 결과 ---
+02_experiments/results/
+03_pipeline/runs/
+
+# --- 라벨링 도구 산출물 (labels.csv / manifest.csv / split.csv / README.md 만 버전관리) ---
+01_preprocess/labels/**/previews/
+01_preprocess/labels/**/previews_fit/
+01_preprocess/labels/**/label_tool.html
+01_preprocess/labels/**/labels.json
+01_preprocess/labels/**/임야/
+01_preprocess/labels/**/형질변경/
+01_preprocess/labels/**/형질변경의심/
+01_preprocess/labels/**/보류/
 
 # --- scratch / OS ---
 *.tmp

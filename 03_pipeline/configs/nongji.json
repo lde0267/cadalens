@@ -1,0 +1,9 @@
+{
+  "_comment": "농지(전·답·과) 형질변경 스크리닝 — 필지 내부 인코딩(interior) + farm/built 2-way softmax + greenhouse side-flag. 구 02_experiments/legacy/nongji_farmland_standalone.py.",
+  "target":   { "sheet": "37714092", "jimok": "전" },
+  "image":    { "chip_mode": "mask", "encoder": "interior", "arch": "ViT-B-32", "keep_tau": 0.5, "min_keep": 4 },
+  "prompt_file": "03_pipeline/prompts/nongji_farm_built.json",
+  "decision": { "mode": "farmland", "built_tau": 0.60, "gh_min": 0.24, "gh_margin": 0.03,
+                "normal_label": "농지", "positive_label": "형질변경의심", "greenhouse_label": "비닐하우스검토" },
+  "eval": {}
+}

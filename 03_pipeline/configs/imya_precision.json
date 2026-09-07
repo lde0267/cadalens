@@ -1,0 +1,9 @@
+{
+  "_comment": "임야 정밀 판정 — mask 칩 + 내부평균색 채움 + 일반 명사구 프롬프트 + τ 0.93. docs/experiments.md §6d·§6e (P 0.85 / R 0.76 / F1 0.80).",
+  "target":   { "sheet": "37714092", "jimok": "임" },
+  "image":    { "chip_mode": "mask", "fill": "mean", "encoder": "whole", "arch": "ViT-B-32" },
+  "prompt_file": "03_pipeline/prompts/imya_forest.json",
+  "decision": { "mode": "binary", "tau": 0.93, "normal_label": "임야", "positive_label": "형질변경의심" },
+  "eval":     { "labels": "01_preprocess/labels/imya_eval_150/labels.csv",
+                "split":  "01_preprocess/labels/imya_eval_150/split.csv" }
+}

@@ -1,0 +1,22 @@
+{
+  "_comment": "Set E2 — E1 과 negative 동일, positive 만 한국 산림특성 제거한 일반 표현. context 칩에서 '한국 산림특성 positive' 가 실제 이득인지 분리하는 대조군.",
+  "positive": [
+    "a forested hillside filling the view",
+    "a slope covered with trees",
+    "green woodland on a hill",
+    "leafless deciduous forest in winter",
+    "a wooded area with many trees",
+    "a tree-covered mountain"
+  ],
+  "negative": [
+    "solar panels covering a cleared mountain slope",
+    "houses or a building with yards cut into the hillside",
+    "a factory or warehouse on leveled hillside ground",
+    "a wide road or graded track cut across the wooded slope",
+    "bare soil with cut tree stumps where forest was logged",
+    "greenhouses or a plowed field cleared from forest land",
+    "grave mounds on a bare patch of hillside",
+    "a quarry or excavation of bare earth and rock on a slope",
+    "a graded construction site with bare pads and retaining walls"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "_comment": "농지(전·답·과) 형질변경 스크리닝. farm vs built 2-way softmax (p_built). greenhouse 는 softmax 밖 side_flag — 겨울 나지가 greenhouse 로 확률질량을 훔치는 붕괴 회피. 구 nongji_farmland_standalone.py GROUPS.",
+  "groups": {
+    "farm": [
+      "a bare plowed farm field",
+      "a dry agricultural field with soil",
+      "a rice paddy field",
+      "farmland with crop rows and furrows",
+      "a fallow field with dry vegetation",
+      "a harvested field with bare soil in winter",
+      "an orchard with rows of bare fruit trees",
+      "cultivated farmland"
+    ],
+    "built": [
+      "a building with a roof",
+      "houses in a residential area",
+      "a large warehouse or factory building",
+      "rows of solar photovoltaic panels",
+      "a parking lot with parked vehicles",
+      "an open yard with stored materials, containers, or equipment",
+      "a paved or concrete-covered lot",
+      "graded bare ground for construction",
+      "a large mound of piled earth or fill soil"
+    ],
+    "greenhouse": [
+      "rows of plastic greenhouses",
+      "long white plastic-covered greenhouse tunnels",
+      "a cluster of vinyl greenhouses"
+    ]
+  },
+  "softmax": ["farm", "built"],
+  "positive_group": "built",
+  "side_flags": ["greenhouse"]
+}

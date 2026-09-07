@@ -1,0 +1,24 @@
+{
+  "_comment": "임야 v2 — real 칩(필지 bbox를 224에 꽉 채움) 전용 서술형. docs/experiments.md §5. 구 classify_wholeimage.py 인라인 POSITIVE_V2/NEGATIVE_V2.",
+  "groups": {
+    "forest": [
+      "a hillside densely covered with tree canopy",
+      "a mix of evergreen and leafless deciduous trees on rough terrain",
+      "an uncultivated wooded slope with no roads or buildings",
+      "forest with irregular natural tree spacing, not planted in rows",
+      "a bare brown deciduous forest canopy in winter",
+      "a steep forested mountainside"
+    ],
+    "changed": [
+      "a patch of bare soil with tree stumps where forest was cleared",
+      "graded flat bare earth with tire tracks cut into a wooded hill",
+      "a metal-roofed shed or building surrounded by trees",
+      "rows of dark solar panels on a cleared hillside",
+      "a new dirt or paved road cut through forest",
+      "grave mounds on a cleared hillside",
+      "a cultivated field or greenhouse on former forest land"
+    ]
+  },
+  "softmax": ["forest", "changed"],
+  "positive_group": "changed"
+}

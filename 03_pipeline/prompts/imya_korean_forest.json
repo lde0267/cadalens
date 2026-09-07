@@ -1,0 +1,22 @@
+{
+  "_comment": "Set E1 — context 칩(필지 중심 넓은 창, 실장면 + 폴리곤 외곽선, 필지가 프레임의 ~14%). positive = 우리나라 산림특성(급경사 산지, 침엽수(소나무·잣·낙엽송)+낙엽활엽(참나무류) 혼효림, 겨울 갈색 참나무 + 상록 소나무, 조림지 줄심기, 임도·방화선 허용). negative = context 장면뷰 기준 실제 산지전용 빈발유형, 오탐 최다 도로 유지.",
+  "positive": [
+    "a steep forested Korean mountain slope filling the view",
+    "a hillside of mixed evergreen pine and leafless brown oak trees",
+    "dark green Korean red pine forest along a mountain ridge",
+    "bare brown winter oak and deciduous forest canopy on a slope",
+    "a conifer plantation of pine or larch planted in rows on a mountainside",
+    "a wooded mountain slope with a narrow forest road or firebreak through it"
+  ],
+  "negative": [
+    "solar panels covering a cleared mountain slope",
+    "houses or a building with yards cut into the hillside",
+    "a factory or warehouse on leveled hillside ground",
+    "a wide road or graded track cut across the wooded slope",
+    "bare soil with cut tree stumps where forest was logged",
+    "greenhouses or a plowed field cleared from forest land",
+    "grave mounds on a bare patch of hillside",
+    "a quarry or excavation of bare earth and rock on a slope",
+    "a graded construction site with bare pads and retaining walls"
+  ]
+}
