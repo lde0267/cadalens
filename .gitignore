@@ -12,13 +12,22 @@ models/
 자료/
 
 # --- 01_preprocess: 대용량 원본·중간 산출 (data/README 대체는 01_preprocess/README) ---
-01_preprocess/raw/
-01_preprocess/derived/
-01_preprocess/chips/
+# 폴더 골격(.gitkeep)은 버전관리, 내용물은 제외
+01_preprocess/raw/**
+01_preprocess/derived/**
+01_preprocess/chips/**
+!01_preprocess/raw/**/
+!01_preprocess/derived/**/
+!01_preprocess/chips/**/
+!01_preprocess/**/.gitkeep
 
 # --- 실험 산출물 / 파이프라인 실행 결과 ---
-02_experiments/results/
-03_pipeline/runs/
+02_experiments/results/**
+03_pipeline/runs/**
+!02_experiments/results/**/
+!03_pipeline/runs/**/
+!02_experiments/results/.gitkeep
+!03_pipeline/runs/.gitkeep
 
 # --- 라벨링 도구 산출물 (labels.csv / manifest.csv / split.csv / README.md 만 버전관리) ---
 01_preprocess/labels/**/previews/
