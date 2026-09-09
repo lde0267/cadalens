@@ -43,7 +43,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from common.remoteclip_backbone import (  # noqa: E402
     ARCH_GRID, load_model, subprompt_embeddings, load_index, patch_coverage, chip_inputs,
 )
-from common.prompts import PROMPT_SETS  # noqa: E402
+from common.prompts import PROMPT_SETS, load_prompt_pair  # noqa: E402
 from common.paths import chip_dir, EXPERIMENT_RESULTS  # noqa: E402
 
 DEF_CHIPS = chip_dir("mask")
@@ -125,6 +125,8 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=DEF_OUT)
     ap.add_argument("--arch", choices=list(ARCH_GRID), default="ViT-B-32")
     ap.add_argument("--prompts", choices=list(PROMPT_SETS), default="v1")
+    ap.add_argument("--prompts-file", type=Path, default=None,
+                    help='JSON {"positive":[...],"negative":[...]}. 주면 --prompts 무시')
     ap.add_argument("--real", action="store_true",
                     help="real 칩(폴리곤 밖도 실영상) - alpha 무시하고 원본 RGB")
     ap.add_argument("--a1-csv", type=Path, default=None, help="비교용 A1 결과 CSV")
@@ -142,7 +144,10 @@ def main() -> None:
 
     device = torch.device("cpu" if args.cpu or not torch.cuda.is_available() else "cuda")
     grid = ARCH_GRID[args.arch]
-    POSITIVE, NEGATIVE = PROMPT_SETS[args.prompts]
+    if args.prompts_file:
+        POSITIVE, NEGATIVE = load_prompt_pair(args.prompts_file)
+    else:
+        POSITIVE, NEGATIVE = PROMPT_SETS[args.prompts]
     meta = load_index(args.chips / "index.csv")
     v1, a1 = load_csv(V1_CSV), load_csv(args.a1_csv or A1_CSV)
 

@@ -1,0 +1,99 @@
+{
+  "_comment": "손으로 구성한 참조 세트. greedy 선택 결과를 이것들과 비교해 '수작업 대비 선택이 얼마나 이기나' 를 잰다. 후보 풀(pool_positive/negative)에서 뽑아 조립.",
+  "v1_generic": {
+    "note": "역대 baseline. 일반 명사구.",
+    "positive": [
+      "a forest",
+      "dense green woodland",
+      "a tree-covered hill",
+      "a forested mountain slope",
+      "a wooded area with many trees",
+      "leafless deciduous forest in winter",
+      "bare brown trees covering a hillside"
+    ],
+    "negative": [
+      "buildings and rooftops",
+      "houses in a residential area",
+      "a large warehouse or factory building",
+      "a paved road",
+      "a parking lot or vehicle storage yard",
+      "an open yard with stored materials or containers",
+      "bare earth cleared of trees",
+      "graded bare construction ground",
+      "rows of solar photovoltaic panels",
+      "a cultivated crop field",
+      "plastic greenhouses",
+      "rows of grave mounds on a hillside",
+      "a grassy field",
+      "bare rocky ground"
+    ]
+  },
+  "e1_korean": {
+    "note": "이미지-방식 재실험 전 최고. 한국 산림특성 pos + 산지전용 neg.",
+    "positive": [
+      "a steep forested Korean mountain slope filling the view",
+      "a hillside of mixed evergreen pine and leafless brown oak trees",
+      "dark green Korean red pine forest along a mountain ridge",
+      "bare brown winter oak and deciduous forest canopy on a slope",
+      "a conifer plantation of pine or larch planted in rows on a mountainside",
+      "a wooded mountain slope with a narrow forest road or firebreak through it"
+    ],
+    "negative": [
+      "solar panels covering a cleared mountain slope",
+      "houses or a building with yards cut into the hillside",
+      "a factory or warehouse on leveled hillside ground",
+      "a wide road or graded track cut across the wooded slope",
+      "bare soil with cut tree stumps where forest was logged",
+      "greenhouses or a plowed field cleared from forest land",
+      "grave mounds on a bare patch of hillside",
+      "a quarry or excavation of bare earth and rock on a slope",
+      "a graded construction site with bare pads and retaining walls"
+    ]
+  },
+  "v3_taxonomy": {
+    "note": "2026-09 재설계. 산지전용 taxonomy + 겨울림/벌채나지 대비쌍. = 03_pipeline/prompts/imya_v3.json",
+    "positive": [
+      "a hillside covered with dense green forest canopy",
+      "a slope of mixed evergreen pine and bare brown winter oak trees",
+      "a rough textured canopy of individual bare deciduous tree crowns following the terrain",
+      "dark evergreen conifer forest along a steep mountain ridge",
+      "a conifer plantation with trees planted in regular rows on a mountainside",
+      "a wooded mountain slope with a narrow bare forest road or firebreak line through it",
+      "a thin or young forest of scattered small trees over rough grass and shrubs on a slope",
+      "natural woodland with irregular tree spacing and no straight cleared edges"
+    ],
+    "negative": [
+      "rows of dark blue solar photovoltaic panels on a cleared slope",
+      "a house or building with a fenced yard on leveled hillside ground",
+      "a large warehouse or factory shed with a bright metal roof",
+      "a wide paved road or machine-graded dirt track cutting straight across the slope",
+      "smooth machine-graded bare earth with tire tracks and a sharp cleared edge",
+      "a logged patch of bare soil dotted with small cut tree stumps",
+      "rows of white plastic greenhouse tunnels",
+      "a plowed field or an orchard with fruit trees planted in rows on former forest land",
+      "rows of low rounded bare or grassy burial mounds",
+      "a quarry or open pit of excavated bare earth, gravel and rock",
+      "an open dirt yard with parked vehicles, shipping containers or stacked materials",
+      "a graded construction site with concrete foundations or retaining walls",
+      "an open field of grass or low weeds on ground where the forest was removed"
+    ]
+  },
+  "hybrid_core_plus_spread": {
+    "note": "greedy 판별 앵커 + 겨울방어 1 + e1식 서술형 negative 다수(개별론 약하지만 p_forest 분포를 펼쳐 τ 안정화). AP=greedy · band=e1 을 동시에 노림.",
+    "positive": [
+      "dense dark green evergreen conifer foliage",
+      "a forest",
+      "leafless brown deciduous forest on a slope in winter"
+    ],
+    "negative": [
+      "a house or building with a fenced yard on leveled hillside ground",
+      "rows of dark blue solar panels covering a cleared slope",
+      "a wide paved road or machine-graded track cutting straight across the slope",
+      "a logged patch of bare soil dotted with small cut tree stumps",
+      "rows of white plastic greenhouse tunnels",
+      "a quarry or open pit of excavated bare earth, gravel and rock",
+      "a graded construction site with concrete foundations or retaining walls",
+      "an open field of grass or low weeds on ground where the forest was removed"
+    ]
+  }
+}

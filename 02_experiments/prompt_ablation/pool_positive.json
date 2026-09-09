@@ -1,0 +1,28 @@
+{
+  "_comment": "임야(=forest) positive 후보 풀. A1~A4 프롬프트 선택 파이프라인(AP 순위 → greedy 전진선택 → LOO)의 입력. 지금까지 만든 30개 세트에서 중복·부정문·저의미 문구를 걷어내고, 설계 축(일반/겨울방어/한국임상/합법지형/치수림/텍스처)을 고루 덮도록 18개로 압축. 각 항목의 cat=설계 축, why=근거.",
+  "candidates": [
+    { "text": "a forest",                                                                    "cat": "generic",      "why": "baseline anchor. CLIP 클래스명 스타일" },
+    { "text": "a dense green forest covering a mountain slope",                                "cat": "generic",      "why": "여름/상록 기본형" },
+    { "text": "a hill completely covered with trees",                                         "cat": "generic",      "why": "수관이 지면을 덮음 = 임야 핵심" },
+
+    { "text": "leafless brown deciduous forest on a slope in winter",                         "cat": "winter",       "why": "겨울 낙엽활엽림이 갈색 → '갈색=나지' 오독 방어" },
+    { "text": "a rough textured canopy of individual bare tree crowns following the terrain", "cat": "winter",       "why": "겨울림 ↔ 매끈한 벌채나지 대비: 질감 있음 + 지형 따라감" },
+    { "text": "a mix of evergreen pine and bare brown winter oak trees",                      "cat": "winter",       "why": "국내 혼효림 + 겨울 상태 동시" },
+
+    { "text": "a steep mountain slope of mixed evergreen pine and oak forest",                "cat": "korean",       "why": "소나무+참나무 혼효림, 급경사 = 국내 임상 특성" },
+    { "text": "dark evergreen conifer forest along a mountain ridge",                         "cat": "korean",       "why": "능선의 짙은 침엽(소나무·잣·낙엽송)" },
+    { "text": "a conifer plantation with trees planted in regular rows on a mountainside",    "cat": "korean",       "why": "조림지도 임야(법적). '줄심기=형질변경' 오독 차단" },
+
+    { "text": "a wooded mountain slope with a narrow forest road or firebreak through it",    "cat": "legal-feature","why": "임도·방화선 합법. '도로 있음=형질변경' 오독 차단" },
+    { "text": "natural woodland with irregular tree spacing and no straight cleared edges",   "cat": "legal-feature","why": "직선 인공 경계 없음 = 형질변경 아님 신호" },
+
+    { "text": "a thin young forest of scattered small trees over rough grass and shrubs on a slope", "cat": "degraded", "why": "치수림·성긴림도 임야. 초지 혼동을 positive쪽에서 흡수" },
+    { "text": "rugged tree-covered ground with no clearing or track",                         "cat": "degraded",     "why": "개간·트랙 없는 울퉁불퉁 수림지" },
+
+    { "text": "a rough irregular canopy texture of pine needles and bare oak branches",       "cat": "texture",      "why": "interior 인코더용: 장면 아닌 수관 질감" },
+    { "text": "dense dark green evergreen conifer foliage",                                   "cat": "texture",      "why": "interior용: 침엽 잎 질감" },
+    { "text": "a bumpy brown canopy of many small bare tree crowns",                          "cat": "texture",      "why": "interior용: 겨울 나목 크라운 요철" },
+    { "text": "mixed evergreen and leafless tree crowns with no smooth open gaps",            "cat": "texture",      "why": "interior용: 매끈한 빈 구간 없음 = 나지 아님" },
+    { "text": "a tree canopy on a slope",                                                     "cat": "minimal",      "why": "최소 구체형 대조군" }
+  ]
+}

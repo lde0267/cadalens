@@ -1,0 +1,44 @@
+{
+  "_comment": "형질변경-의심(=changed) negative 후보 풀. A1~A4 파이프라인 입력. 산지관리법상 산지전용 유형별로 1~2개 표현 변주(greedy가 더 나은 문구를 고르도록), + 저대비 앵커(초지)·자연지형 트랩(암석)을 딜레마 검정용으로 포함, + interior용 재질 문구. 부정문('not forest' 등)·단일 모호어·중복은 제거. cat=산지전용 유형, why=근거.",
+  "candidates": [
+    { "text": "rows of dark blue solar panels covering a cleared slope",                       "cat": "solar",        "why": "산지전용 최다 유형. 사면 개간 맥락 명시" },
+    { "text": "rows of solar photovoltaic panels",                                             "cat": "solar",        "why": "동일 유형 일반 표현(문구 변주 비교)" },
+
+    { "text": "a house or building with a fenced yard on leveled hillside ground",             "cat": "building",     "why": "주택·근생. 평탄화 산지 맥락" },
+    { "text": "houses in a residential area",                                                  "cat": "building",     "why": "동일 유형 일반 표현" },
+
+    { "text": "a large warehouse or factory shed with a bright metal roof",                    "cat": "warehouse",    "why": "창고·공장. 밝은 금속지붕 특징" },
+
+    { "text": "a wide paved road or machine-graded track cutting straight across the slope",   "cat": "road",         "why": "최다 오탐원. '직선+가로지름+조성'으로 임도와 분리" },
+    { "text": "a paved road",                                                                  "cat": "road",         "why": "동일 유형 일반 표현(임도 흡인 여부 비교용)" },
+
+    { "text": "smooth machine-graded bare earth with tire tracks and a sharp cleared edge",   "cat": "graded-bare",  "why": "조성 나지 ↔ 겨울림 대비: 매끈+중장비+날카로운 경계" },
+    { "text": "bare earth cleared of trees",                                                   "cat": "graded-bare",  "why": "동일 유형 일반 표현" },
+
+    { "text": "a logged patch of bare soil dotted with small cut tree stumps",                 "cat": "logged",       "why": "검증셋 최다 잔차오차. '점점이 박힌 그루터기+맨흙'" },
+    { "text": "bare soil with a grid of small cut tree stumps",                                "cat": "logged",       "why": "동일 유형 텍스처 변주(interior 겸용)" },
+
+    { "text": "rows of white plastic greenhouse tunnels",                                      "cat": "greenhouse",   "why": "온실. 흰 아치 터널 열" },
+    { "text": "plastic greenhouses",                                                          "cat": "greenhouse",   "why": "동일 유형 일반 표현" },
+
+    { "text": "a plowed field or an orchard with fruit trees in rows on former forest land",   "cat": "cultivation",  "why": "개간·과수. '옛 임야' 맥락" },
+
+    { "text": "rows of low rounded bare or grassy burial mounds",                             "cat": "grave",        "why": "묘지(봉분). 낮고 둥근 반복 형태" },
+
+    { "text": "a quarry or open pit of excavated bare earth, gravel and rock",                 "cat": "quarry",       "why": "토석채취·굴착·토취장" },
+
+    { "text": "an open dirt yard with parked vehicles, shipping containers or stacked materials", "cat": "yard",       "why": "야적·주차·자재적치" },
+
+    { "text": "a graded construction site with concrete foundations or retaining walls",       "cat": "construction", "why": "공사장. 콘크리트 기초·옹벽" },
+
+    { "text": "an open field of grass or low weeds on ground where the forest was removed",    "cat": "grass-anchor", "why": "저대비 재식생 앵커. '제거된 자리'에 묶어 자연초지와 분리 (recall 앵커)" },
+    { "text": "a grassy field",                                                                "cat": "grass-anchor", "why": "무맥락 초지. FP·FN 양쪽 유발했던 문구 — 넣을지/뺄지 greedy가 판정" },
+
+    { "text": "bare rocky ground",                                                            "cat": "terrain-trap", "why": "자연 암석지. negative에 넣으면 임상 흡인 위험 — 딜레마 검정" },
+    { "text": "exposed rock, gravel and landslide scars on a bare slope",                     "cat": "terrain-trap", "why": "자연 붕괴흔·너덜. 동일 딜레마" },
+
+    { "text": "smooth flat machine-graded bare soil",                                          "cat": "texture",      "why": "interior용: 매끈 평탄 조성토 재질" },
+    { "text": "a smooth metal, tiled or solar panel surface",                                  "cat": "texture",      "why": "interior용: 인공 매끈 표면" },
+    { "text": "smooth asphalt or concrete pavement",                                           "cat": "texture",      "why": "interior용: 포장 표면" }
+  ]
+}

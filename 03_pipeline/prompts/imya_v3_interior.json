@@ -1,0 +1,27 @@
+{
+  "_comment": "임야 v3 interior 전용. interior 인코더는 필지 내부 패치 텍스처/재질만 봄 → 장면 관계 서술 대신 표면 묘사. pos·neg 둘 다 구체적이어야 효과(docs §6c).",
+  "groups": {
+    "forest": [
+      "a rough irregular canopy texture of pine needles and bare oak branches",
+      "dense dark green evergreen conifer foliage",
+      "a bumpy brown canopy of many small bare tree crowns",
+      "mixed evergreen and leafless tree crowns with no smooth open gaps",
+      "sparse small trees, rough shrubs and grass over rocky slope ground",
+      "uneven tree-covered ground with no flat cleared patch"
+    ],
+    "changed": [
+      "smooth flat machine-graded bare soil",
+      "bare earth with parallel tire or machine tracks",
+      "a flat dark blue solar panel surface",
+      "a smooth metal or tiled roof surface",
+      "smooth asphalt or concrete pavement",
+      "bare soil with a grid of small cut tree stumps",
+      "a translucent white plastic greenhouse roof",
+      "rows of smooth rounded grassy burial mounds",
+      "flat mowed grass with no trees",
+      "loose gravel, crushed rock and excavated soil"
+    ]
+  },
+  "softmax": ["forest", "changed"],
+  "positive_group": "changed"
+}

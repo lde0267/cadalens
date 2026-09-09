@@ -1,0 +1,32 @@
+{
+  "_comment": "임야 v3 (2026-09 전면 재설계). 근거: ① 산지관리법상 산지전용 유형 = negative taxonomy · ② 국내 임상 특성(소나무+참나무 혼효림, 급경사, 조림지 줄심기, 임도·방화선 합법) = positive · ③ 검증셋 최다 잔차오차(겨울 갈색림 ↔ 벌채 그루터기 나지)를 pos·neg 양쪽에서 대비쌍으로 명시 · ④ CLIP prompt-ensemble(문구 묶음→프로토타입).",
+  "groups": {
+    "forest": [
+      "a hillside covered with dense green forest canopy",
+      "a slope of mixed evergreen pine and bare brown winter oak trees",
+      "a rough textured canopy of individual bare deciduous tree crowns following the terrain",
+      "dark evergreen conifer forest along a steep mountain ridge",
+      "a conifer plantation with trees planted in regular rows on a mountainside",
+      "a wooded mountain slope with a narrow bare forest road or firebreak line through it",
+      "a thin or young forest of scattered small trees over rough grass and shrubs on a slope",
+      "natural woodland with irregular tree spacing and no straight cleared edges"
+    ],
+    "changed": [
+      "rows of dark blue solar photovoltaic panels on a cleared slope",
+      "a house or building with a fenced yard on leveled hillside ground",
+      "a large warehouse or factory shed with a bright metal roof",
+      "a wide paved road or machine-graded dirt track cutting straight across the slope",
+      "smooth machine-graded bare earth with tire tracks and a sharp cleared edge",
+      "a logged patch of bare soil dotted with small cut tree stumps",
+      "rows of white plastic greenhouse tunnels",
+      "a plowed field or an orchard with fruit trees planted in rows on former forest land",
+      "rows of low rounded bare or grassy burial mounds",
+      "a quarry or open pit of excavated bare earth, gravel and rock",
+      "an open dirt yard with parked vehicles, shipping containers or stacked materials",
+      "a graded construction site with concrete foundations or retaining walls",
+      "an open field of grass or low weeds on ground where the forest was removed"
+    ]
+  },
+  "softmax": ["forest", "changed"],
+  "positive_group": "changed"
+}
