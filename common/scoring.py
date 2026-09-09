@@ -82,10 +82,10 @@ def band_frac(scores: list[float], tau: float, delta: float) -> tuple[int, int, 
 def score_labels(gt: dict[str, str], pred_pos: dict[str, bool],
                  pos_label: str, hold_label: str = "보류") -> dict:
     """단일 임계 예측(pred_pos: pnu→bool) 을 손라벨(gt: pnu→라벨)로 채점.
-    hold_label 과 pred 에 없는 pnu 는 제외."""
+    hold_label · '제외' · pred 에 없는 pnu 는 제외."""
     tp = fp = fn = tn = 0
     for pnu, g in gt.items():
-        if g == hold_label or pnu not in pred_pos:
+        if g == hold_label or g == "제외" or pnu not in pred_pos:
             continue
         gp = (g == pos_label)
         pp = pred_pos[pnu]

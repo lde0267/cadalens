@@ -45,7 +45,7 @@ def run(cfg: dict, run_dir: Path) -> Path | None:
     subsets = {"dev": [], "test": [], "all": []}
     miss = 0
     for pnu, g in labels.items():
-        if g == "보류":
+        if g in ("보류", "제외"):
             continue
         s = scores.get(pnu)
         if s is None:

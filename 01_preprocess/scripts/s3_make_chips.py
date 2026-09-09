@@ -12,11 +12,17 @@
 
 기본 입력: 01_preprocess/derived/anseong_37714092_parcels_within.gpkg   (s2 산출)
            01_preprocess/derived/(B060)정사영상_2025_37714092_georef.tif  (s1 산출)
-산출:     01_preprocess/chips/<sheet>_<mode>/   (index.csv + <pnu>_<jibun>.png + _montage.png)
+산출:     01_preprocess/chips/<sheet>_<mode>/           (--jimok 단일)
+          01_preprocess/chips/<sheet>_<group>_<mode>/   (--group 또는 --jimok 콤마목록)
+          (index.csv + <pnu>_<jibun>.png + _montage.png)
 
 예시:
+    # 필지별 전체 칩 — 임야 / 농지(전·답·과) 분리, 해당 지목 전 필지
+    python 01_preprocess/scripts/s3_make_chips.py --group imya   --mode real --limit 0
+    python 01_preprocess/scripts/s3_make_chips.py --group nongji --mode mask --limit 0
+
     python 01_preprocess/scripts/s3_make_chips.py --jimok 임 --mode mask --limit 0
-    python 01_preprocess/scripts/s3_make_chips.py --jimok 임 --mode real --limit 0
+    python 01_preprocess/scripts/s3_make_chips.py --jimok 전,답,과 --mode real --limit 0
     python 01_preprocess/scripts/s3_make_chips.py --jimok all --mode context --limit 0
 """
 from __future__ import annotations
@@ -42,6 +48,12 @@ from shapely.geometry import mapping  # noqa: E402
 DEF_PARCELS = _PARCELS
 DEF_ORTHO = _ORTHO
 # --outdir 미지정 시 mode 별로 01_preprocess/chips/<sheet>_<mode>/ 로 자동 결정
+
+# 필지 그룹 → 지목부호 집합 (필지별 칩을 지목군 단위로 분리 생성)
+GROUPS = {
+    "imya": ["임"],            # 임야
+    "nongji": ["전", "답", "과"],  # 농지 = 전 · 답 · 과수원
+}
 
 
 def sanitize(s: str) -> str:
@@ -178,8 +190,12 @@ def main() -> None:
                     help="미지정 시 01_preprocess/chips/<sheet>_<mode>/ 자동")
     ap.add_argument("--size", type=int, default=224, help="칩 한 변 픽셀 (RemoteCLIP=224)")
     ap.add_argument("--limit", type=int, default=10, help="0 이면 전체")
+    ap.add_argument("--group", choices=sorted(GROUPS),
+                    help="필지 그룹으로 지목 지정: imya=임 / nongji=전,답,과. "
+                         "지정 시 --jimok 무시, 산출 폴더는 <sheet>_<group>_<mode>/")
     ap.add_argument("--jimok", default="임",
-                    help="지목부호 필터 (예: 임, 대, 답). 'all' 이면 전체")
+                    help="지목부호 필터. 단일(임) · 콤마목록(전,답,과) · 'all'(전체). "
+                         "--group 을 주면 무시됨")
     ap.add_argument("--select", choices=["area", "random", "head"], default="area",
                     help="area=면적 큰 순, random=무작위, head=파일 순서")
     ap.add_argument("--pad-m", type=float, default=0.0, help="창 바깥 여유(m)")
@@ -201,16 +217,29 @@ def main() -> None:
     ap.add_argument("--fill", type=int, default=0, help="nodata/패딩 채움값 (기본 0=검정)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
+
+    # 지목 필터 결정: --group(imya/nongji) 우선 → --jimok(단일 · 콤마목록 · all)
+    if args.group:
+        jimoks = list(GROUPS[args.group])
+        filter_tag = args.group
+        jimok_desc = f"{args.group}({','.join(jimoks)})"
+    elif args.jimok.lower() == "all":
+        jimoks, filter_tag, jimok_desc = None, None, "all"
+    else:
+        jimoks = [j.strip() for j in args.jimok.split(",") if j.strip()]
+        filter_tag = "".join(jimoks) if len(jimoks) > 1 else None
+        jimok_desc = ",".join(jimoks)
+
     if args.outdir is None:
-        args.outdir = chip_dir(args.mode)
+        args.outdir = chip_dir(args.mode, group=filter_tag)
 
     gdf = gpd.read_file(args.parcels)
     if "JIMOK" not in gdf.columns:
         raise SystemExit("입력에 JIMOK 컬럼이 없습니다. extract_parcels_within_image.py 산출물을 쓰세요.")
-    if args.jimok.lower() != "all":
-        gdf = gdf[gdf["JIMOK"] == args.jimok]
+    if jimoks is not None:
+        gdf = gdf[gdf["JIMOK"].isin(jimoks)]
     if gdf.empty:
-        raise SystemExit(f"지목 '{args.jimok}' 필지가 없습니다.")
+        raise SystemExit(f"지목 '{jimok_desc}' 필지가 없습니다.")
 
     if "area_m2" not in gdf.columns:
         gdf["area_m2"] = gdf.geometry.area
@@ -229,7 +258,7 @@ def main() -> None:
         args.outdir.mkdir(parents=True, exist_ok=True)
         rows, saved = [], []
         print(f"정사영상: {args.ortho.name}  ({ortho.res[0]} m/px)")
-        print(f"대상 필지: 지목='{args.jimok}', {args.select} 상위 {len(gdf)}개, "
+        print(f"대상 필지: 지목='{jimok_desc}', {args.select} 상위 {len(gdf)}개, "
               f"칩 {'%dx%d' % (args.size, args.size) if args.square else '원본크롭'}\n")
 
         for r in gdf.itertuples():

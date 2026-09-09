@@ -6,8 +6,10 @@
 - data/cadastral/derived/anseong_37714092_parcels_within.gpkg 에서 지목 '임' 필지
 - 면적 5분위 층화표집으로 N개(기본 150)
 - 각 필지: (a) 맥락 뷰(넓게)  (b) 근접 뷰(bbox 타이트)  둘 다 폴리곤 반투명 빨강 + 외곽선
-- label_tool.html : 이미지 base64 내장, 키보드(1 임야 / 2 형질변경 / 3 보류), localStorage 자동저장,
-                    "결과 저장(labels.json)" 다운로드 버튼
+- label_tool.html : 이미지 base64 내장, 키보드(1 임야 / 2 형질변경 / 3 보류 / 4 제외),
+                    localStorage 자동저장, "결과 저장(labels.json)" 다운로드 버튼
+    * 제외 = 칩/영상 자체가 이상(구름·엉뚱한 필지·심한 왜곡 등) → 라벨로 쓰지 않음.
+      finalize_labels.py 가 labels.csv 에서 빼고 excluded.csv 로 따로 기록.
 
 산출: data/labels/imya_eval_150/
         previews/*.jpg   manifest.csv   label_tool.html
@@ -185,8 +187,9 @@ figcaption{text-align:center;color:#999;font-size:12px;margin-top:4px}
 .acts{display:flex;gap:12px;justify-content:center;margin:16px 0}
 .acts .b{font-size:16px;padding:12px 26px}
 .imya{border-color:#4caf50;color:#8bd68b}.chg{border-color:#e05555;color:#ef9a9a}.hold{border-color:#888}
+.excl{border-color:#c9a227;color:#e0c975}
 .nav{display:flex;gap:10px;justify-content:center;margin-top:8px}
-.tag{font-weight:700}.tag.imya{color:#8bd68b}.tag.chg{color:#ef9a9a}.tag.hold{color:#bbb}
+.tag{font-weight:700}.tag.imya{color:#8bd68b}.tag.chg{color:#ef9a9a}.tag.hold{color:#bbb}.tag.excl{color:#e0c975}
 kbd{background:#333;border-radius:4px;padding:1px 6px;border:1px solid #555;font-size:11px}
 .done{opacity:.5}
 </style></head><body>
@@ -207,6 +210,7 @@ kbd{background:#333;border-radius:4px;padding:1px 6px;border:1px solid #555;font
     <button class="b imya" data-l="임야">임야 <kbd>1</kbd></button>
     <button class="b chg" data-l="형질변경">형질변경 <kbd>2</kbd></button>
     <button class="b hold" data-l="보류">보류 <kbd>3</kbd></button>
+    <button class="b excl" data-l="제외">제외 <kbd>4</kbd></button>
   </div>
   <div class="nav">
     <button id="prev">◀ 이전 <kbd>←</kbd></button>
@@ -216,7 +220,8 @@ kbd{background:#333;border-radius:4px;padding:1px 6px;border:1px solid #555;font
   <p style="text-align:center;color:#888;font-size:12px;margin-top:20px">
     빨간 영역이 판정 대상 필지. 나무 수관이 덮여있으면 <b>임야</b>,
     벌채·나지·조성·건물·주차/야적·태양광·묘지·관통도로 등이면 <b>형질변경</b>,
-    판단 어려우면 <b>보류</b>. 라벨은 브라우저에 자동저장됨.
+    판단 어려우면 <b>보류</b>. 칩/영상 자체가 이상(구름·엉뚱한 필지·심한 왜곡)이면
+    <b>제외</b> — 평가 라벨로 쓰지 않음. 라벨은 브라우저에 자동저장됨.
   </p>
 </div>
 <script>
@@ -234,15 +239,17 @@ function render(){
   const d = DATA[i];
   $('#imgC').src = d.ctx; $('#imgT').src = d.tight;
   const cur = labels[d.pnu];
-  const tagCls = cur ? ({'임야':'imya','형질변경':'chg','보류':'hold'}[cur.label]) : '';
+  const tagCls = cur ? ({'임야':'imya','형질변경':'chg','보류':'hold','제외':'excl'}[cur.label]) : '';
   $('#meta').innerHTML = `<b>${d.jibun}</b> · ${d.area.toLocaleString()} m² · ${d.pnu}` +
      (cur ? ` &nbsp;→ <span class="tag ${tagCls}">${cur.label}</span>` : '');
   $('#pos').textContent = `${i+1} / ${DATA.length}`;
   const n = Object.keys(labels).length;
   $('#pi').style.width = (100*n/DATA.length) + '%';
-  let a=0,b=0,c=0; for(const k in labels){const l=labels[k].label; if(l==='임야')a++;else if(l==='형질변경')b++;else c++;}
+  let a=0,b=0,c=0,d=0; for(const k in labels){const l=labels[k].label;
+    if(l==='임야')a++;else if(l==='형질변경')b++;else if(l==='제외')d++;else c++;}
   $('#cnt').innerHTML = `완료 <b>${n}</b>/${DATA.length}` +
-     `<span class="tag imya">임야 ${a}</span><span class="tag chg">형질변경 ${b}</span><span class="tag hold">보류 ${c}</span>`;
+     `<span class="tag imya">임야 ${a}</span><span class="tag chg">형질변경 ${b}</span>` +
+     `<span class="tag hold">보류 ${c}</span><span class="tag excl">제외 ${d}</span>`;
 }
 function setLabel(l){
   const d = DATA[i];
@@ -268,6 +275,7 @@ window.addEventListener('keydown', e => {
   if(e.key==='1') setLabel('임야');
   else if(e.key==='2') setLabel('형질변경');
   else if(e.key==='3') setLabel('보류');
+  else if(e.key==='4') setLabel('제외');
   else if(e.key==='ArrowLeft'){ i=Math.max(0,i-1); render(); }
   else if(e.key==='ArrowRight'){ i=Math.min(DATA.length-1,i+1); render(); }
 });

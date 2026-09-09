@@ -4,8 +4,9 @@
 label_tool.html 에서 내보낸 labels.json 을 정리 + (있으면) 방법별 성능 채점.
 
 산출 (01_preprocess/labels/imya_eval_150/ 안):
-  - labels.csv                     (pnu,jibun,area_m2,label,ts)
-  - 임야|형질변경|보류/            미리보기(ctx) 분류 복사
+  - labels.csv                     (pnu,jibun,area_m2,label,ts) — '제외' 는 뺀다
+  - excluded.csv                   손라벨 '제외'(칩/영상 이상, 평가 미사용) 목록
+  - 임야|형질변경|보류|제외/       미리보기(ctx) 분류 복사
 
 채점: `--pred <scores.csv> ...` 로 준 CSV(들) 을 형질변경=positive 로 P/R/F1/Acc 출력 (보류 제외).
       각 CSV 는 pnu + label 컬럼(값 '형질변경의심') 을 가져야 한다.
@@ -32,6 +33,7 @@ from common.scoring import score_labels  # noqa: E402
 
 PREV = LABEL_SET / "previews"
 POS = "형질변경"
+EXCLUDE = "제외"          # 칩/영상 이상 — 평가 라벨로 쓰지 않음
 PRED_POS_VALUE = "형질변경의심"
 
 
@@ -67,25 +69,39 @@ def main() -> None:
 
     jp = find_json(args.labels_json)
     arr = json.loads(jp.read_text(encoding="utf-8"))
-    gt = {r["pnu"]: r["label"] for r in arr}
-    print(f"labels.json: {jp}  ({len(gt)}개)")
+    excluded = sorted((r for r in arr if r.get("label") == EXCLUDE), key=lambda r: r["pnu"])
+    kept = [r for r in arr if r.get("label") != EXCLUDE]
+    gt = {r["pnu"]: r["label"] for r in kept}
+    print(f"labels.json: {jp}  ({len(arr)}개 = 평가 {len(kept)} + 제외 {len(excluded)})")
 
-    rows = sorted(arr, key=lambda r: r["pnu"])
+    fields = ["pnu", "jibun", "area_m2", "label", "ts"]
+    rows = sorted(kept, key=lambda r: r["pnu"])
     with open(LABEL_SET / "labels.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.DictWriter(f, fieldnames=["pnu", "jibun", "area_m2", "label", "ts"])
+        w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         for r in rows:
-            w.writerow({k: r.get(k, "") for k in w.fieldnames})
+            w.writerow({k: r.get(k, "") for k in fields})
     print(f"→ {LABEL_SET / 'labels.csv'}")
     print("분포: " + " · ".join(f"{k} {v}" for k, v in Counter(gt.values()).most_common()))
 
-    for sub in ("임야", "형질변경", "보류"):
+    ex_csv = LABEL_SET / "excluded.csv"
+    if excluded:
+        with open(ex_csv, "w", newline="", encoding="utf-8-sig") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            w.writeheader()
+            for r in excluded:
+                w.writerow({k: r.get(k, "") for k in fields})
+        print(f"→ {ex_csv}  ({len(excluded)}개, 평가에서 제외)")
+    elif ex_csv.exists():
+        ex_csv.unlink()
+
+    for sub in ("임야", "형질변경", "보류", EXCLUDE):
         d = LABEL_SET / sub
         if d.exists():
             shutil.rmtree(d)
         d.mkdir(parents=True)
     miss = 0
-    for pnu, lab in gt.items():
+    for pnu, lab in list(gt.items()) + [(r["pnu"], EXCLUDE) for r in excluded]:
         src = PREV / f"{pnu}_ctx.jpg"
         if src.exists():
             shutil.copy2(src, LABEL_SET / lab / f"{pnu}.jpg")

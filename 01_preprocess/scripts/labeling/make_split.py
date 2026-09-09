@@ -52,6 +52,8 @@ def q_of(v: float, edges: list[float]) -> int:
 def main() -> None:
     with open(LABELS, encoding="utf-8-sig") as f:
         rows = list(csv.DictReader(f))
+    # finalize_labels.py 가 이미 '제외' 를 뺐지만, 혹시 섞여 들어와도 방어
+    rows = [r for r in rows if r["label"] in ("형질변경", "임야", "보류")]
     for r in rows:
         r["area_m2"] = float(r["area_m2"])
     rows.sort(key=lambda r: r["pnu"])  # 결정적 시작 순서
