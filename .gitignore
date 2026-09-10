@@ -22,12 +22,20 @@ models/
 !01_preprocess/**/.gitkeep
 
 # --- 실험 산출물 / 파이프라인 실행 결과 ---
+02_experiments/prompt_ablation/_cache/
 02_experiments/results/**
 03_pipeline/runs/**
 !02_experiments/results/**/
 !03_pipeline/runs/**/
 !02_experiments/results/.gitkeep
 !03_pipeline/runs/.gitkeep
+
+# --- 03_pipeline: 입력 데이터 (재현: _make_sample.py / _make_regions.py) ---
+03_pipeline/data/**/*.png
+03_pipeline/data/**/*_montage.png
+03_pipeline/data/**/*.gpkg
+03_pipeline/data/**/labels*.json
+03_pipeline/data/**/index.csv
 
 # --- 라벨링 도구 산출물 (labels.csv / manifest.csv / split.csv / README.md 만 버전관리) ---
 01_preprocess/labels/**/previews/
@@ -38,6 +46,11 @@ models/
 01_preprocess/labels/**/형질변경/
 01_preprocess/labels/**/형질변경의심/
 01_preprocess/labels/**/보류/
+# 친구 배포용 라벨링 패키지 (make_label_package.py 산출: label.html + images/ + zip)
+01_preprocess/labels/packages/
+# 검증셋 칩 사본 (build_eval_set.py 산출; labels/split/manifest.csv + README 만 버전관리,
+# chips/ 는 원본 chips + labels/labels/*.json 에서 재생성)
+01_preprocess/labels/**/chips/
 
 # --- scratch / OS ---
 *.tmp

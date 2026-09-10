@@ -1,0 +1,33 @@
+{
+  "_comment": "농지(전·답·과) 형질변경 스크리닝 — built = 농지법상 농지전용(농지 형질변경) 실제 유형: 건축물/주택/근생·공장창고·축사·태양광·주차장/포장부지·자재컨테이너 야적·성토복토·건설정지 나지·도로. farm = 실제 경작 상태(밭·논·과수원·휴경·수확후 나지·겨울). greenhouse 는 softmax 밖 side_flag(비닐하우스는 농지이용이라 형질변경 아님, 겨울나지 확률질량 도둑 회피). interior 인코딩 + mask 칩 용.",
+  "groups": {
+    "farm": [
+      "a bare plowed dry field with soil ready for planting",
+      "a dry agricultural field with crop rows and furrows",
+      "a flooded or wet rice paddy with low embankments",
+      "a fallow field covered with dry weeds and stubble",
+      "a harvested field of bare soil in winter",
+      "an orchard with rows of bare fruit trees on tilled ground",
+      "green leafy vegetable crops growing in a field"
+    ],
+    "built": [
+      "a building or house with a roof standing in a field",
+      "a large warehouse or factory shed with a wide metal roof",
+      "a long livestock barn or animal shed with a metal roof",
+      "rows of dark blue solar photovoltaic panels covering the field",
+      "a paved or concrete-covered lot with parked vehicles",
+      "an open yard with stored shipping containers, pipes or stacked building materials",
+      "a raised pad of piled fill soil or earth dumped over the field",
+      "machine-graded bare ground with tire tracks prepared for construction",
+      "an asphalt road or concrete driveway across the farmland"
+    ],
+    "greenhouse": [
+      "rows of white plastic greenhouse tunnels",
+      "long arched plastic-covered greenhouse structures",
+      "a dense cluster of vinyl greenhouses"
+    ]
+  },
+  "softmax": ["farm", "built"],
+  "positive_group": "built",
+  "side_flags": ["greenhouse"]
+}

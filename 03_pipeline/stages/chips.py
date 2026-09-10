@@ -1,46 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""stage 1 — 칩 확인/생성.
+"""stage 1 — 입력 칩 폴더 확인.
 
-config 의 image.chip_mode + target.jimok 에 맞는 칩 폴더가
-01_preprocess/chips/<sheet>_<mode>/ 에 있고 그 지목을 덮으면 재사용,
-없으면 01_preprocess/scripts/s3_make_chips.py 를 서브프로세스로 호출해 만든다.
-(칩 산출물은 전처리 폴더에 귀속 — 파이프라인 run 폴더에는 경로만 기록.)
+파이프라인은 **이미 만들어진 필지 칩 폴더**를 입력으로 받는다 (전처리 s1~s3 불필요).
+config 의 `target.chips` 가 그 폴더를 가리키고, 여기서는
+
+  - `index.csv` 가 있는지
+  - config 의 `target.jimok` 지목이 index 에 들어있는지
+  - `<...>.png` 칩이 실제로 있는지
+
+만 확인한 뒤 경로를 run 폴더에 `1_chips.txt` 로 기록한다.
+
+입력 칩 폴더 규약:
+  <chips_dir>/
+    index.csv          # 헤더에 최소 chip,pnu,jibun,jimok,area_m2,valid_ratio
+    <pnu>_<jibun>.png  # RGBA (alpha = 폴리곤 마스크: 내부 255 / 외부 0)
 """
 from __future__ import annotations
 
 import csv
-import subprocess
-import sys
 from pathlib import Path
 
-from common.paths import ROOT, chip_dir
 
-
-def _covers(index_csv: Path, jimoks: set[str]) -> bool:
-    if not index_csv.exists():
-        return False
+def _index_jimoks(index_csv: Path) -> set[str]:
     with open(index_csv, encoding="utf-8-sig") as f:
-        have = {r.get("jimok") for r in csv.DictReader(f)}
-    return jimoks <= have
+        return {(r.get("jimok") or "").strip() for r in csv.DictReader(f)}
 
 
 def run(cfg: dict, run_dir: Path) -> Path:
     jimoks = {j.strip() for j in cfg["target"]["jimok"].split(",") if j.strip()}
-    mode = cfg["image"]["chip_mode"]
-    sheet = cfg["target"].get("sheet", "37714092")
-    cdir = chip_dir(mode, sheet)
+    cdir = Path(cfg["target"]["chips"])          # run.py 가 절대경로로 해결해 넣어줌
     index = cdir / "index.csv"
 
-    if _covers(index, jimoks):
-        print(f"[chips] 재사용: {cdir}  (지목 {sorted(jimoks)} 포함)")
-    else:
-        s3_jimok = next(iter(jimoks)) if len(jimoks) == 1 else "all"
-        print(f"[chips] 생성: {cdir}  (지목 {s3_jimok}, mode={mode})")
-        cmd = [sys.executable, str(ROOT / "01_preprocess" / "scripts" / "s3_make_chips.py"),
-               "--jimok", s3_jimok, "--mode", mode, "--limit", "0", "--outdir", str(cdir)]
-        subprocess.run(cmd, check=True, cwd=ROOT)
+    if not cdir.is_dir():
+        raise SystemExit(f"[chips] 입력 칩 폴더 없음: {cdir}\n"
+                         f"        config 의 target.chips 를 <pnu>.png + index.csv 가 든 폴더로 지정하세요.")
+    if not index.exists():
+        raise SystemExit(f"[chips] index.csv 없음: {index}")
+
+    have = _index_jimoks(index)
+    missing = jimoks - have
+    if missing:
+        raise SystemExit(f"[chips] 지목 {sorted(missing)} 이 index.csv 에 없음 "
+                         f"(있는 지목: {sorted(j for j in have if j)})")
+
+    n_png = sum(1 for p in cdir.glob("*.png") if not p.name.startswith("_"))
+    if n_png == 0:
+        raise SystemExit(f"[chips] png 칩이 하나도 없음: {cdir}")
 
     (run_dir / "1_chips.txt").write_text(str(cdir) + "\n", encoding="utf-8")
-    print(f"[chips] → {run_dir / '1_chips.txt'}  ({cdir})")
+    print(f"[chips] 입력: {cdir}  (지목 {sorted(jimoks)} 포함, png {n_png}개)")
+    print(f"[chips] → {run_dir / '1_chips.txt'}")
     return cdir

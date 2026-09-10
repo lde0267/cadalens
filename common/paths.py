@@ -29,7 +29,9 @@ ORTHO_GEOREF = DERIVED / "(B060)정사영상_2025_36813045_georef.tif"
 PARCELS = DERIVED / "gimcheon_36813045_parcels_within.gpkg"
 CADASTRE_SHP = RAW_CADASTRAL / "LSMD_CONT_LDREG_경북_김천시" / "LSMD_CONT_LDREG_47150_202608.shp"
 
-LABEL_SET = LABELS / "imya_eval_150"
+LABEL_SET = LABELS / "imya_eval_150"        # 초기 임야 zero-shot 평가용 150 (면적층화)
+IMYA_EVAL_SET = LABELS / "imya_eval"        # 손라벨 전량 검증셋 (임야 vs 형질변경, 7도엽)
+NONGJI_EVAL_SET = LABELS / "nongji_eval"    # 손라벨 전량 검증셋 (농지 vs 형질변경, 6도엽)
 JIMOK_TAXONOMY = REFERENCE / "jimok_taxonomy.json"
 JIMOK_CODES = REFERENCE / "jimok_codes.csv"
 
@@ -46,7 +48,10 @@ def chip_dir(mode: str, sheet: str = SHEET, group: str | None = None) -> Path:
 # --- 02_experiments --------------------------------------------------------
 EXPERIMENTS = ROOT / "02_experiments"
 EXPERIMENT_RESULTS = EXPERIMENTS / "results"
-PROMPT_SETS_DIR = EXPERIMENTS / "prompt_ablation" / "prompt_sets"
+PROMPT_ABLATION = EXPERIMENTS / "prompt_ablation"
+PROMPT_SETS_DIR = PROMPT_ABLATION / "sets"              # 사용자가 편집하는 프롬프트 세트 <name>.json
+PROMPT_CANDIDATES_DIR = PROMPT_ABLATION / "candidates"  # probe 용 문구 후보 풀
+PROMPT_WORK_SUBSET = PROMPT_ABLATION / "_work_subset.csv"  # 동결된 개발용 부분집합 (pnu,split)
 
 # --- 03_pipeline ---------------------------------------------------------
 PIPELINE = ROOT / "03_pipeline"

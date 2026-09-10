@@ -1,9 +1,44 @@
 {
-  "_comment": "농지(전·답·과) 형질변경 스크리닝 — 필지 내부 인코딩(interior) + farm/built 2-way softmax + greenhouse side-flag. 구 02_experiments/legacy/nongji_farmland_standalone.py.",
-  "target":   { "sheet": "37714092", "jimok": "전" },
-  "image":    { "chip_mode": "mask", "encoder": "interior", "arch": "ViT-B-32", "keep_tau": 0.5, "min_keep": 4 },
-  "prompt_file": "03_pipeline/prompts/nongji_farm_built.json",
-  "decision": { "mode": "farmland", "built_tau": 0.60, "gh_min": 0.24, "gh_margin": 0.03,
-                "normal_label": "농지", "positive_label": "형질변경의심", "greenhouse_label": "비닐하우스검토" },
+  "_comment": "농지(전·답·과) 형질변경 스크리닝 + 심각도. 입력 = 농지 필지 mask 칩. interior 인코딩 + farm/built 2-way softmax(농지전용 유형기반 nongji_change) + greenhouse side-flag. flag: p_built >= 0.60 또는 패치 형질변경비율 change_frac >= 0.45. 심각도: 개발제한구역 저촉(겹치면 높음) + 필지크기 3분위 + change_frac(level_up 0.35).",
+  "target": {
+    "chips": "data/nongji_sample",
+    "jimok": "전,답,과"
+  },
+  "image": {
+    "chip_mode": "mask",
+    "encoder": "interior",
+    "arch": "ViT-B-32",
+    "keep_tau": 0.5,
+    "min_keep": 4
+  },
+  "prompt_file": "03_pipeline/prompts/nongji_change.json",
+  "decision": {
+    "mode": "farmland",
+    "norm": "none",
+    "built_tau": 0.6,
+    "frac_tau": 0.45,
+    "gh_min": 0.24,
+    "gh_margin": 0.03,
+    "normal_label": "농지",
+    "positive_label": "형질변경의심",
+    "greenhouse_label": "비닐하우스검토"
+  },
+  "severity": {
+    "parcels": "data/sejong_36710022_parcels.gpkg",
+    "greenbelt": "greenbelt/LSMD_CONT_UD801_세종",
+    "risk_floor": 0.5,
+    "area_big_m2": 5000,
+    "cf_hi": 0.35,
+    "w_gb": 40,
+    "w_cf": 30,
+    "w_area": 30,
+    "cf_ref": 0.5,
+    "area_ref_m2": 5000,
+    "score_bands": [
+      30,
+      58
+    ],
+    "area_lo_m2": 300
+  },
   "eval": {}
 }

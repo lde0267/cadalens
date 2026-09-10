@@ -1,9 +1,0 @@
-{
-  "_comment": "임야 real 칩 프로파일 — 필지 bbox를 224에 꽉 채운 real 칩 + v2 서술형 프롬프트 + whole-image CLS + τ 0.85. docs/experiments.md §5 (P 0.78 / R 0.82 / F1 0.80).",
-  "target":   { "sheet": "37714092", "jimok": "임" },
-  "image":    { "chip_mode": "real", "fill": "black", "encoder": "whole", "arch": "ViT-B-32" },
-  "prompt_file": "03_pipeline/prompts/imya_realfit_v2.json",
-  "decision": { "mode": "binary", "tau": 0.85, "normal_label": "임야", "positive_label": "형질변경의심" },
-  "eval":     { "labels": "01_preprocess/labels/imya_eval_150/labels.csv",
-                "split":  "01_preprocess/labels/imya_eval_150/split.csv" }
-}

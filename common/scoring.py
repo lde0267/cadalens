@@ -25,6 +25,30 @@ def read_csv(p: str | Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def normalize(vals: list[float], mode: str = "none") -> list[float]:
+    """도엽(지역) 내 점수 분포 드리프트 제거 — 전역 τ 하나로 자르기 위한 정규화.
+      none    : 원점수 그대로
+      zscore  : (v - 평균) / 표준편차   (분포 위치·폭 제거, 모양은 유지)
+      rank    : 지역 내 오름차순 백분위 [0,1]  (모양까지 균일화)
+    원점수와 단조증가 관계를 유지하므로 판정식(방향)은 그대로 두고 임계값만 정규화 공간으로 바꾸면 된다.
+    """
+    if not vals:
+        return []
+    if mode in ("z", "zscore"):
+        import statistics
+        m = statistics.fmean(vals)
+        sd = statistics.pstdev(vals) or 1.0
+        return [(v - m) / sd for v in vals]
+    if mode == "rank":
+        idx = sorted(range(len(vals)), key=lambda i: vals[i])
+        n = max(len(vals) - 1, 1)
+        out = [0.0] * len(vals)
+        for k, i in enumerate(idx):
+            out[i] = k / n
+        return out
+    return list(vals)
+
+
 def taus(lo: float = TAU_LO, hi: float = TAU_HI, step: float = TAU_STEP) -> list[float]:
     n = round((hi - lo) / step)
     return [round(lo + i * step, 2) for i in range(n + 1)]
@@ -77,6 +101,48 @@ def band_frac(scores: list[float], tau: float, delta: float) -> tuple[int, int, 
     n = sum(1 for v in scores if abs(v - tau) <= delta)
     tot = len(scores)
     return n, tot, (round(n / tot, 4) if tot else 0.0)
+
+
+# ---------------------------------------------------------------- threshold-free
+# score = p_forest 이고 positive = 형질변경 이므로, 점수가 낮을수록 positive.
+# sklearn 은 "점수 높을수록 positive" 를 기대 → predict="below" 면 부호를 뒤집는다.
+def _pos_score(scores, predict: str = "below"):
+    import numpy as np
+    s = np.asarray(scores, dtype=float)
+    return -s if predict == "below" else s
+
+
+def ap(scores, y_pos, predict: str = "below") -> float:
+    """average precision (PR-AUC). y_pos = positive(형질변경) 여부 bool/0-1."""
+    import numpy as np
+    from sklearn.metrics import average_precision_score
+    return float(average_precision_score(np.asarray(y_pos).astype(int),
+                                         _pos_score(scores, predict)))
+
+
+def roc_auc(scores, y_pos, predict: str = "below") -> float:
+    import numpy as np
+    from sklearn.metrics import roc_auc_score
+    return float(roc_auc_score(np.asarray(y_pos).astype(int),
+                               _pos_score(scores, predict)))
+
+
+def bootstrap_ap(scores, y_pos, predict: str = "below", n: int = 200,
+                 seed: int = 0) -> tuple[float, float]:
+    """복원추출 n 회 → test AP 의 (평균, 표준편차). 세트 간 차이가 노이즈 안/밖인지 판단용."""
+    import numpy as np
+    s = np.asarray(scores, dtype=float)
+    y = np.asarray(y_pos).astype(int)
+    idx = np.arange(len(s))
+    rng = np.random.default_rng(seed)
+    vals = []
+    for _ in range(n):
+        b = rng.choice(idx, size=len(idx), replace=True)
+        if 0 < y[b].sum() < len(b):
+            vals.append(ap(s[b], y[b], predict))
+    if not vals:
+        return 0.0, 0.0
+    return float(np.mean(vals)), float(np.std(vals))
 
 
 def score_labels(gt: dict[str, str], pred_pos: dict[str, bool],

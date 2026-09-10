@@ -1,0 +1,27 @@
+{
+  "_comment": "임야 형질변경 스크리닝. changed = 산지관리법상 산지전용 유형 8개(태양광·건축물+부지·정지/도로 절토·벌채나지·개간밭/과수원/비닐하우스·분묘·토석채취/굴착·자재야적). 각 문구에 '숲 안에/숲을 깎아낸' 맥락절을 붙여 '대부분 임야 + 일부만 전환' 혼합 장면에도 프로토타입이 걸리게 함(real 칩이라 폴리곤 밖도 실영상). positive = 국내 임상 특성 8개(급경사·소나무+겨울 갈색 참나무 혼효림·조림지 줄심기·임도/방화선 합법·성긴 어린 숲). forest 8 : changed 8 균형.",
+  "groups": {
+    "forest": [
+      "a hillside covered with dense green forest canopy",
+      "a slope of mixed evergreen pine and bare brown winter oak trees",
+      "a rough natural canopy of individual tree crowns following steep terrain",
+      "dark evergreen conifer forest along a mountain ridge",
+      "a conifer plantation with young trees planted in regular rows on a mountainside",
+      "a wooded mountain slope with only a narrow bare forest road or firebreak through it",
+      "a thin young forest of scattered small trees over rough grass and shrubs on a slope",
+      "natural woodland with irregular tree spacing and no straight cleared edges"
+    ],
+    "changed": [
+      "rows of dark blue solar photovoltaic panels on a slope cleared out of the forest",
+      "a building with a metal or tiled roof and a cleared yard cut into the forested hillside",
+      "machine-graded bare earth with tire tracks and a new road or sharp cleared edge cut into the wooded slope",
+      "a logged clearing of bare soil scattered with cut tree stumps among standing trees",
+      "a plowed field, rows of orchard trees or white plastic greenhouse tunnels on former forest land",
+      "rows of low rounded grassy grave mounds on a bare patch cleared in the forest",
+      "a quarry or construction excavation of bare earth, rock and gravel with concrete retaining walls on the slope",
+      "an open dirt yard with parked vehicles, shipping containers or stacked materials surrounded by trees"
+    ]
+  },
+  "softmax": ["forest", "changed"],
+  "positive_group": "changed"
+}

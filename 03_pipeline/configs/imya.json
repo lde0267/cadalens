@@ -1,0 +1,40 @@
+{
+  "_comment": "임야 형질변경 스크리닝 + 심각도. 입력 = 임야 필지 real 칩. real 칩 + whole-image CLS + 산지전용 유형기반 프롬프트(imya_change). flag: p_forest < 0.85 또는 패치 형질변경비율 change_frac >= 0.22 (부분 전환 포착). 심각도: 개발제한구역 저촉(겹치면 높음) + 필지크기 3분위 + change_frac(level_up 0.22 — 임야 패치신호는 낮게 뭉침).",
+  "target": {
+    "chips": "data/imya_sample",
+    "jimok": "임"
+  },
+  "image": {
+    "chip_mode": "real",
+    "fill": "black",
+    "encoder": "whole",
+    "arch": "ViT-B-32"
+  },
+  "prompt_file": "03_pipeline/prompts/imya_change.json",
+  "decision": {
+    "mode": "binary",
+    "norm": "none",
+    "tau": 0.85,
+    "frac_tau": 0.22,
+    "normal_label": "임야",
+    "positive_label": "형질변경의심"
+  },
+  "severity": {
+    "parcels": "data/sejong_36710022_parcels.gpkg",
+    "greenbelt": "greenbelt/LSMD_CONT_UD801_세종",
+    "risk_floor": 0.5,
+    "area_big_m2": 30000,
+    "cf_hi": 0.35,
+    "w_gb": 40,
+    "w_cf": 30,
+    "w_area": 30,
+    "cf_ref": 0.5,
+    "area_ref_m2": 20000,
+    "score_bands": [
+      30,
+      58
+    ],
+    "area_lo_m2": 1000
+  },
+  "eval": {}
+}

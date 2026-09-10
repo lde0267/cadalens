@@ -1,0 +1,8 @@
+{
+  "_comment": "임야 정밀 판정 레시피 — mask 칩 + 폴리곤 밖 내부평균색 채움 + 일반 명사구 프롬프트 + whole-image CLS + τ 0.93 (docs/experiments.md §6d·§6e · P 0.85 / R 0.76 / F1 0.80). 입력은 임야 'mask' 칩 폴더여야 함 (canonical imya.json 은 real 칩). target.chips 를 mask 칩 폴더로 바꿔 쓰세요.",
+  "target":   { "chips": "data/imya_sample", "jimok": "임" },
+  "image":    { "chip_mode": "mask", "fill": "mean", "encoder": "whole", "arch": "ViT-B-32" },
+  "prompt_file": "03_pipeline/prompts/imya_forest.json",
+  "decision": { "mode": "binary", "tau": 0.93, "normal_label": "임야", "positive_label": "형질변경의심" },
+  "eval": {}
+}

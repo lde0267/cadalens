@@ -20,7 +20,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-from common.remoteclip_backbone import patch_coverage, encode_kept
+from common.remoteclip_backbone import patch_coverage, encode_kept, chip_inputs
 
 FILLS = ("black", "blackout", "mean", "gray", "inpaint")
 
@@ -69,6 +69,68 @@ def encode_whole(model, preprocess, device, paths, fill: str = "black") -> torch
     px = torch.stack([preprocess(load_rgb(p, fill)) for p in paths]).to(device)
     ie = model.encode_image(px).float()
     return ie / ie.norm(dim=-1, keepdim=True)
+
+
+@torch.no_grad()
+def _dense_patch_vecs(v, px, keep_idx, keep_residual: bool = True, last_mlp: bool = False):
+    """px[1,3,224,224], keep_idx=유지 패치(0..grid^2-1). 반환 내부 패치별 [K,D] (L2 정규화).
+    마지막 transformer 블록에서 q·k attention 제거(MaskCLIP surgery) — 패치별 국소 특징 보존.
+    02_experiments/image_method/classify_densepatch.dense_patch_vecs 와 동일."""
+    x = v._embeds(px)
+    sel = torch.cat([torch.zeros(1, dtype=torch.long, device=x.device), keep_idx + 1])
+    x = x.index_select(1, sel)
+    blocks = v.transformer.resblocks
+    for blk in blocks[:-1]:
+        x = blk(x)
+    last = blocks[-1]
+    h = last.ln_1(x)
+    W, b = last.attn.in_proj_weight, last.attn.in_proj_bias
+    D = last.attn.embed_dim
+    val = torch.nn.functional.linear(h, W[2 * D:3 * D, :], b[2 * D:3 * D])
+    attn_out = last.attn.out_proj(val)
+    x = (x + attn_out) if keep_residual else attn_out
+    if last_mlp:
+        x = x + last.mlp(last.ln_2(x))
+    feat = v.ln_post(x)
+    pv = feat[:, 1:, :] @ v.proj
+    return (pv / pv.norm(dim=-1, keepdim=True))[0]
+
+
+@torch.no_grad()
+def dense_patch_change(model, preprocess, device, paths, grid: int,
+                       E_forest: torch.Tensor, E_changed: torch.Tensor, logit_scale: float,
+                       keep_tau: float = 0.5, min_keep: int = 4, patch_thr: float = 0.5,
+                       last_mlp: bool = False, composite_black: bool = True) -> list[tuple]:
+    """필지 내부 패치별 p_change(= changed 그룹 2-way softmax) → 필지당 집계.
+    반환 paths 순서대로 [(change_frac, change_frac50, n_patch), ...]
+      change_frac   = 커버리지 가중 평균 p_change     (0..1, "필지 내부 중 얼마나 바뀌어 보이나")
+      change_frac50 = p_change > patch_thr 패치 커버리지 가중 비율
+    E_forest / E_changed 는 L2 정규화된 그룹 평균 임베딩 [D]."""
+    v = model.visual
+    out = []
+    for p in paths:
+        px, alpha = chip_inputs(p, preprocess, device, composite_black=composite_black)
+        cov = patch_coverage(alpha, grid)
+        keep = np.where(cov >= keep_tau)[0]
+        if len(keep) < min_keep:
+            keep = np.argsort(-cov)[:min_keep]
+        keep = np.sort(keep)
+        w = cov[keep].astype(np.float64)
+        if w.sum() < 0.5:
+            w = np.ones_like(w)
+        pv = _dense_patch_vecs(v, px, torch.tensor(keep, dtype=torch.long, device=device),
+                               last_mlp=last_mlp)                       # [K,D]
+        sf = (pv @ E_forest).cpu().numpy()
+        sc = (pv @ E_changed).cpu().numpy()
+        logits = np.stack([logit_scale * sf, logit_scale * sc], 1)
+        logits -= logits.max(1, keepdims=True)
+        e = np.exp(logits)
+        p_change = e[:, 1] / e.sum(1)                                   # [K]
+        W = w.sum()
+        out.append((round(float((w * p_change).sum() / W), 4),
+                    round(float((w * (p_change > patch_thr)).sum() / W), 4),
+                    int(len(keep))))
+    return out
 
 
 @torch.no_grad()

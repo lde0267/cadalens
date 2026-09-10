@@ -1,9 +1,0 @@
-{
-  "_comment": "임야 고재현 스크리닝 — 필지 내부 인코딩(interior, 폴리곤 밖 패치토큰 드롭) + 한국 산림특성 pos + 산지전용 neg + τ 0.83. docs/experiments.md §6c (F1 0.815 / R 0.98). 1차 스크리닝용.",
-  "target":   { "sheet": "37714092", "jimok": "임" },
-  "image":    { "chip_mode": "mask", "encoder": "interior", "arch": "ViT-B-32", "keep_tau": 0.5, "min_keep": 4 },
-  "prompt_file": "03_pipeline/prompts/imya_korean_forest.json",
-  "decision": { "mode": "binary", "tau": 0.83, "normal_label": "임야", "positive_label": "형질변경의심" },
-  "eval":     { "labels": "01_preprocess/labels/imya_eval_150/labels.csv",
-                "split":  "01_preprocess/labels/imya_eval_150/split.csv" }
-}

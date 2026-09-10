@@ -21,7 +21,7 @@ from pathlib import Path
 import torch
 
 from common.remoteclip_backbone import ARCH_GRID, load_model, subprompt_embeddings, load_index
-from common.encoders import encode_whole, encode_interior
+from common.encoders import encode_whole, encode_interior, dense_patch_change
 from common.prompts import load_groups
 
 
@@ -40,6 +40,8 @@ def run(cfg: dict, run_dir: Path, chips_dir: Path, batch: int = 32) -> Path:
     jimok = cfg["target"]["jimok"]
     keep_tau = img.get("keep_tau", 0.5)
     min_keep = img.get("min_keep", 4)
+    patch_thr = img.get("patch_thr", 0.5)
+    last_mlp = bool(img.get("last_mlp", False))
 
     spec = load_groups(Path(cfg["prompt_file"]))
     groups, softmax_g, pos_g = spec["groups"], spec["softmax"], spec["positive_group"]
@@ -71,6 +73,10 @@ def run(cfg: dict, run_dir: Path, chips_dir: Path, batch: int = 32) -> Path:
         E_side[k] = E_side[k] / E_side[k].norm()
 
     pos_is_g0 = (pos_g == g0)
+    # dense 패치용 그룹 평균 (forest = 정상, changed = positive_group)
+    E_forest_mean = E_soft[1] if pos_is_g0 else E_soft[0]
+    E_changed_mean = E_soft[0] if pos_is_g0 else E_soft[1]
+
     rows, done = [], 0
     for grp in _chunks(files, batch):
         if encoder in ("whole", "cls"):
@@ -86,6 +92,11 @@ def run(cfg: dict, run_dir: Path, chips_dir: Path, batch: int = 32) -> Path:
         S0 = (ie @ E_g0.T).cpu().numpy()
         S1 = (ie @ E_g1.T).cpu().numpy()
         side = {sf: (ie @ E_side[sf]).cpu().numpy() for sf in E_side}
+        # 패치별 형질변경 비율 (부분 전환 포착 — decide 의 2차 트리거 + severity 신호 C)
+        dp = dense_patch_change(model, preprocess, device, grp, grid,
+                                E_forest_mean, E_changed_mean, logit_scale,
+                                keep_tau=keep_tau, min_keep=min_keep, patch_thr=patch_thr,
+                                last_mlp=last_mlp, composite_black=(chip_mode != "real"))
 
         for k, f in enumerate(grp):
             m = meta.get(f.name, {})
@@ -105,6 +116,10 @@ def run(cfg: dict, run_dir: Path, chips_dir: Path, batch: int = 32) -> Path:
                 "closest_pos_cos": round(float(forest_S[k].max()), 4),
                 "closest_neg": changed_names[int(changed_S[k].argmax())],
                 "closest_neg_cos": round(float(changed_S[k].max()), 4),
+                "change_frac": dp[k][0], "change_frac50": dp[k][1], "n_patch": dp[k][2],
+                # 서브프롬프트별 코사인 (선형프로브 피처용)
+                "sims_normal": " ".join(f"{v:.4f}" for v in forest_S[k]),
+                "sims_changed": " ".join(f"{v:.4f}" for v in changed_S[k]),
             }
             if side:
                 sf = list(side)[0]
